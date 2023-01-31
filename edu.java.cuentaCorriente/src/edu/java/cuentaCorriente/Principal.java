@@ -31,22 +31,28 @@ public class Principal {
 			
 			switch (opcion) {			
 				case 1:
-					listaCcc.add(ccc.crearCuenta());					
-					System.out.println("Cuenta creada: " + listaCcc.get(listaCcc.size()-1).toString());
+					listaCcc.add(ccc.crearCuenta(listaCcc));					
+					System.out.println("Cuenta creada: " + listaCcc.get(listaCcc.size()-1));
 					break;
 				case 2:
-					//llamams al método
+					//llamamos al método
 					listaCcc = ccc.ingresoCuenta(listaCcc);
 					break;
 				case 3:
+					listaCcc=ccc.sacarDinero(listaCcc);
 					break;
 				case 4:
+					ccc.mostrarCuentasUsuario(listaCcc);
 					break;
 				case 5:
+					System.out.println("Desconectando, gracias por su confianza");
 					cerrarMenu = true;
 					break;
-				default:
-
+				default:					
+					System.err.println("** Error opción "+opcion+" no disponible **");
+					System.out.println("Introduzca la opción deseada [1..5]: ");
+					opcion = entradaOpcion.nextInt();
+					System.out.println("[INFO] - Has seleccionado la opcion " + opcion);
 			}
 		}		
 

@@ -71,7 +71,7 @@ public class CuentaCorriente {
 	}
 	
 	//Métodos
-	public CuentaCorriente crearCuenta () {
+	public CuentaCorriente crearCuenta (List<CuentaCorriente> bd) {
 		
 		System.out.println("CREAR CUENTA: ");
 		Scanner entradaDni = new Scanner(System.in);	
@@ -114,23 +114,87 @@ public class CuentaCorriente {
 		}		
 
 		if(esEncontrado) {
+			Scanner entradaIngreso = new Scanner(System.in);			
 			System.out.println("Indique saldo a ingresar: ");
-			Scanner entradaIngreso = new Scanner(System.in);
 			double ingreso = entradaIngreso.nextDouble();
 			double saldoActual = bd.get(contador).getSaldo();
 			bd.get(contador).setSaldo(saldoActual+ingreso);
 			double saldoNuevo = saldoActual+ingreso;
-			System.out.println("Saldo anterior: "+saldoActual+"Saldo nuevo: "+ingreso);
+			
+			System.out.println("Saldo anterior: "+saldoActual+" Saldo nuevo: "+saldoNuevo);
+			
 		}else {
-			System.out.println("No existe cuenta para el dni indicaco: "+opcionEntradaDni);
+			System.out.println("No existe cuenta para el dni indicado: "+opcionEntradaDni);
 			return bd;
 		}
 		return bd;
 	}
 	
-	public ArrayList<CuentaCorriente> mostrarCuentasUsuario(String dniUsuario){
-		return null;		
+	public void mostrarCuentasUsuario(List<CuentaCorriente> bd){
+		Scanner entradaDni = new Scanner(System.in);
+		System.out.println("Indique dni de cuenta: ");
+		String dniPosible = entradaDni.next();
+		
+		int contador=0;
+		boolean existe=false;
+		//Comprobación de la existencia de la cuenta con el dni
+		for(CuentaCorriente infoCuenta: bd) {
+			String dniOriginal = infoCuenta.getDni();
+			if(dniOriginal.equals(dniPosible)) {
+				existe=true;
+				break;
+			} 
+			contador++;
+		}
+		//Presentación de los datos en caso de que la cuenta esté ya creada
+		if(existe) {
+			System.out.println("INFORMACIÓN DE LA CUENTA CORRIENTE: ");
+			System.out.println("DNI: "+bd.get(contador).getDni()); 
+			System.out.println("Nombre de titular: "+bd.get(contador).getNombreTitular());
+			System.out.println("Saldo: "+ bd.get(contador).getSaldo());
+		} else {
+			System.out.println("La cuenta con dni "+ dniPosible +" no se encuentra");
+		}
+					
 	}
+	public List<CuentaCorriente> sacarDinero(List<CuentaCorriente> bd) {
+		System.out.println("RETIRO DE SALDO: ");
+		//Comprobación
+		Scanner entradaDni = new Scanner(System.in);
+		System.out.println("Indique dni de cuenta: ");
+		String opcionEntradaDni = entradaDni.next();
+		//buscar la cuenta
+		int contador = 0;
+		boolean esEncontrado = false;
+		for(CuentaCorriente cuenta: bd) {			
+			String dniBd = cuenta.getDni();
+			if(dniBd.equals(opcionEntradaDni)) {
+				esEncontrado = true;
+				break;
+			}
+			contador++;			
+		}
+		if(esEncontrado) {
+			System.out.println("Saldo en cuenta: "+bd.get(contador).getSaldo());
+			Scanner entradaRetiro = new Scanner(System.in);			
+			System.out.println("Indique saldo a retirar: ");
+			double retiro = entradaRetiro.nextDouble();
+			double saldoActual = bd.get(contador).getSaldo();
+			if(saldoActual<retiro)
+				System.err.println("** Saldo en cuenta insuficiente **");
+			else {
+				bd.get(contador).setSaldo(saldoActual-retiro);	
+				double saldoNuevo = saldoActual-retiro;
+				System.out.println("Saldo anterior: "+saldoActual+" Saldo nuevo: "+saldoNuevo);
+			}						
+		}else {
+			System.out.println("No existe cuenta para el dni indicado: "+opcionEntradaDni);
+			return bd;
+		}
+		return bd;
+
+	}
+	
 	
 	
 }
